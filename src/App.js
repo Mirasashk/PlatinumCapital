@@ -1,25 +1,27 @@
-import React, { useEffect } from 'react';
-import LoginPage from './pages/LoginPage';
+import React, { useEffect, useState } from 'react';
+
 import MyRoutes from './utils/routes';
-
-import firebase from 'firebase/compat/app';
-
-import { firebaseConfig } from './apis/firebase';
 import { onAuthStateChanged, getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material';
 import theme from './utils/MyMaterialTheme';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+import MyDrawer from './components/MyDrawer';
+
 const App = () => {
   const auth = getAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      console.log(auth);
       if (!user) {
         navigate('/login');
+      } else if (location.pathname == '/login') {
+        navigate('/*');
       } else {
-        navigate('/');
+        navigate(location.pathname);
       }
     });
   }, []);
@@ -27,7 +29,10 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <div>
-        <MyRoutes />
+        <Routes>
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/*' element={<MyDrawer />} />
+        </Routes>
       </div>
     </ThemeProvider>
   );

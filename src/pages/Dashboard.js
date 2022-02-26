@@ -9,11 +9,7 @@ const Dashboard = () => {
     auth.signOut();
   };
 
-  return (
-    <div>
-      <Button onClick={handleLogout}>Sign out</Button>
-    </div>
-  );
+  return <div>Dashboard</div>;
 };
 
 export default Dashboard;

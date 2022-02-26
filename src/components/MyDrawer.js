@@ -1,28 +1,24 @@
-import * as React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { Button } from '@mui/material';
-import { Dashboard } from '@mui/icons-material';
 import Logo from '../assets/images/Logo.png';
-import { Avatar } from '@mui/material';
 import Image from 'mui-image';
 import { getAuth } from 'firebase/auth';
+import MyRoutes from '../utils/routes';
+import DrawerMenuItems from './DrawerMenuItems';
+
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const drawerWidth = 300;
 
@@ -91,11 +87,31 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MyAppBarDrawer() {
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+const GetAuth = async () => {
+  return await getAuth();
+};
 
-  const auth = getAuth();
+export default function MyAppBarDrawer() {
+  const [open, setOpen] = useState(false);
+  const [auth, setAuth] = useState('');
+  const [done, setDone] = useState(undefined);
+  const componentMounted = useRef(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      const response = GetAuth();
+      if (componentMounted.current) {
+        response.then((result) => {
+          setAuth(result);
+          setDone(true);
+        });
+      }
+    }, 1000);
+    return () => {
+      // This code runs when component is unmounted
+      componentMounted.current = false; // (4) set it to false when we leave the page
+    };
+  }, []);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -106,107 +122,76 @@ export default function MyAppBarDrawer() {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position='fixed' open={open}>
-        <Toolbar>
-          <IconButton
-            color='inherit'
-            aria-label='open drawer'
-            onClick={handleDrawerOpen}
-            edge='start'
-            sx={{
-              marginRight: '36px',
-              ...(open && { display: 'none' }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant='h6'
-            component='div'
-            sx={{ flexGrow: 1 }}
-          >
-            Platinum Capital
-          </Typography>
-          <Button
-            variant='outlined'
-            color='inherit'
-            onClick={() => {
-              auth.signOut();
-            }}
-          >
-            Sign Out
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant='permanent' open={open}>
-        <DrawerHeader>
-          <Box component='div' sx={{ flexGrow: 1, pl: 2 }}>
-            <Image src={Logo} fit='contain' width='40px' />
+    <>
+      {!done ? (
+        <Backdrop
+          sx={{
+            color: '#fff',
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+          }}
+          open={true}
+        >
+          <CircularProgress color='primary' />
+        </Backdrop>
+      ) : (
+        <Box sx={{ display: 'flex' }}>
+          <CssBaseline />
+          <AppBar position='fixed' open={open}>
+            <Toolbar>
+              <IconButton
+                color='inherit'
+                aria-label='open drawer'
+                onClick={handleDrawerOpen}
+                edge='start'
+                sx={{
+                  marginRight: '36px',
+                  ...(open && { display: 'none' }),
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography
+                variant='h6'
+                component='div'
+                sx={{ flexGrow: 1 }}
+              >
+                Platinum Capital
+              </Typography>
+              <Typography sx={{ pr: 4 }}>
+                Hello, {auth.currentUser.email}
+              </Typography>
+              <Button
+                variant='outlined'
+                color='inherit'
+                onClick={() => {
+                  auth.signOut();
+                }}
+              >
+                Sign Out
+              </Button>
+            </Toolbar>
+          </AppBar>
+          <Drawer variant='permanent' open={open}>
+            <DrawerHeader>
+              <Box component='div' sx={{ flexGrow: 1, pl: 2 }}>
+                <Image src={Logo} fit='contain' width='40px' />
+              </Box>
+              <IconButton
+                onClick={handleDrawerClose}
+                sx={{ justifyContent: 'flex-end' }}
+              >
+                <ChevronLeftIcon />
+              </IconButton>
+            </DrawerHeader>
+            <Divider />
+            <DrawerMenuItems />
+          </Drawer>
+          <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
+            <DrawerHeader />
+            <MyRoutes />
           </Box>
-          <IconButton
-            onClick={handleDrawerClose}
-            sx={{ justifyContent: 'flex-end' }}
-          >
-            <ChevronLeftIcon />
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          <ListItem button>
-            <ListItemIcon>
-              <Dashboard />
-            </ListItemIcon>
-            <ListItemText>Dashboard</ListItemText>
-          </ListItem>
-        </List>
-        <Divider />
-        <List>
-          <ListItem button>
-            <ListItemIcon>
-              <Dashboard />
-            </ListItemIcon>
-            <ListItemText>Users</ListItemText>
-          </ListItem>
-        </List>
-      </Drawer>
-      <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-        <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-          do eiusmod tempor incididunt ut labore et dolore magna
-          aliqua. Rhoncus dolor purus non enim praesent elementum
-          facilisis leo vel. Risus at ultrices mi tempus imperdiet.
-          Semper risus in hendrerit gravida rutrum quisque non tellus.
-          Convallis convallis tellus id interdum velit laoreet id
-          donec ultrices. Odio morbi quis commodo odio aenean sed
-          adipiscing. Amet nisl suscipit adipiscing bibendum est
-          ultricies integer quis. Cursus euismod quis viverra nibh
-          cras. Metus vulputate eu scelerisque felis imperdiet proin
-          fermentum leo. Mauris commodo quis imperdiet massa
-          tincidunt. Cras tincidunt lobortis feugiat vivamus at augue.
-          At augue eget arcu dictum varius duis at consectetur lorem.
-          Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-          sapien faucibus et molestie ac.
-        </Typography>
-        <Typography paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla
-          est ullamcorper eget nulla facilisi etiam dignissim diam.
-          Pulvinar elementum integer enim neque volutpat ac tincidunt.
-          Ornare suspendisse sed nisi lacus sed viverra tellus. Purus
-          sit amet volutpat consequat mauris. Elementum eu facilisis
-          sed odio morbi. Euismod lacinia at quis risus sed vulputate
-          odio. Morbi tincidunt ornare massa eget egestas purus
-          viverra accumsan in. In hendrerit gravida rutrum quisque non
-          tellus orci ac. Pellentesque nec nam aliquam sem et tortor.
-          Habitant morbi tristique senectus et. Adipiscing elit duis
-          tristique sollicitudin nibh sit. Ornare aenean euismod
-          elementum nisi quis eleifend. Commodo viverra maecenas
-          accumsan lacus vel facilisis. Nulla posuere sollicitudin
-          aliquam ultrices sagittis orci a.
-        </Typography>
-      </Box>
-    </Box>
+        </Box>
+      )}
+    </>
   );
 }
