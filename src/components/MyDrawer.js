@@ -134,7 +134,7 @@ export default function MyAppBarDrawer() {
           <CircularProgress color='primary' />
         </Backdrop>
       ) : (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', height: '100vh' }}>
           <CssBaseline />
           <AppBar position='fixed' open={open}>
             <Toolbar>
@@ -158,7 +158,7 @@ export default function MyAppBarDrawer() {
                 Platinum Capital
               </Typography>
               <Typography sx={{ pr: 4 }}>
-                Hello, {auth.currentUser.email}
+                Hello, {auth.currentUser.displayName}
               </Typography>
               <Button
                 variant='outlined'
@@ -186,7 +186,10 @@ export default function MyAppBarDrawer() {
             <Divider />
             <DrawerMenuItems />
           </Drawer>
-          <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
+          <Box
+            component='main'
+            sx={{ flexGrow: 1, p: 3, bgcolor: '#f3f3f3' }}
+          >
             <DrawerHeader />
             <MyRoutes />
           </Box>

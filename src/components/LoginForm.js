@@ -15,7 +15,6 @@ import AuthProvider from '../utils/handleLogin';
 const LoginForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.target);
 
     AuthProvider(event);
   };
