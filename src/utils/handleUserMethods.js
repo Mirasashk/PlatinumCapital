@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const handleCreateUser = async (props) => {
+export const handleCreateUser = async (props) => {
   const data = new FormData(props.target);
 
   const userData = {
@@ -16,4 +16,18 @@ const handleCreateUser = async (props) => {
   }
 };
 
-export default handleCreateUser;
+export const handleDeleteUser = async (props) => {
+  const email = {
+    email: props.Email,
+  };
+  console.log(email);
+  try {
+    const userInfo = await axios.post(
+      'http://localhost:5000/auth/user/',
+      email
+    );
+    console.log(userInfo);
+  } catch (err) {
+    console.log(err);
+  }
+};

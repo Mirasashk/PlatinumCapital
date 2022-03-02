@@ -9,7 +9,7 @@ import {
   MenuItem,
 } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-import handleCreateUser from '../utils/handleCreateUser';
+import { handleCreateUser } from '../utils/handleUserMethods';
 import { useNavigate } from 'react-router-dom';
 
 const AddUser = () => {

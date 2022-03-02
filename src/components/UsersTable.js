@@ -13,14 +13,23 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
+
 import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
+
 import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
+
 import { visuallyHidden } from '@mui/utils';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Modal from '@mui/material/Modal';
+import Button from '@mui/material/Button';
+import { handleDeleteUser } from '../utils/handleUserMethods';
 
 function createData(Email, DisplayName, Access, LastLogin, Action) {
   return {
@@ -97,7 +106,7 @@ function UsersTableHead(props) {
     <TableHead>
       <TableRow>
         <TableCell padding='checkbox'>
-          <Checkbox
+          {/* <Checkbox
             color='primary'
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
@@ -105,7 +114,7 @@ function UsersTableHead(props) {
             inputProps={{
               'aria-label': 'select all desserts',
             }}
-          />
+          /> */}
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -113,6 +122,7 @@ function UsersTableHead(props) {
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ fontWeight: 600 }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -148,40 +158,43 @@ const UsersTableToolbar = (props) => {
   const { numSelected } = props;
 
   return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          color='inherit'
-          variant='subtitle1'
-          component='div'
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant='h6'
-          id='tableTitle'
-          component='div'
-        >
-          User List
-        </Typography>
-      )}
+    <>
+      <Toolbar
+        sx={{
+          pl: { sm: 2 },
+          pr: { xs: 1, sm: 1 },
+          ...(numSelected > 0 && {
+            bgcolor: (theme) =>
+              alpha(
+                theme.palette.primary.main,
+                theme.palette.action.activatedOpacity
+              ),
+          }),
+        }}
+      >
+        {numSelected > 0 ? (
+          <Typography
+            sx={{ flex: '1 1 100%' }}
+            color='inherit'
+            variant='subtitle1'
+            component='div'
+          >
+            {numSelected} selected
+          </Typography>
+        ) : (
+          <>
+            <Typography
+              sx={{ flex: '1 1 100%', ml: 4 }}
+              variant='h5'
+              id='tableTitle'
+              component='div'
+            >
+              User List
+            </Typography>
+          </>
+        )}
 
-      {numSelected > 0 ? (
+        {/* {numSelected > 0 ? (
         <Tooltip title='Delete'>
           <IconButton>
             <DeleteIcon />
@@ -193,8 +206,9 @@ const UsersTableToolbar = (props) => {
             <FilterListIcon />
           </IconButton>
         </Tooltip>
-      )}
-    </Toolbar>
+      )} */}
+      </Toolbar>
+    </>
   );
 };
 
@@ -209,7 +223,8 @@ export default function UsersTable(props) {
   const [page, setPage] = React.useState(0);
   const [done, setDone] = React.useState(false);
   const [rows, setRows] = React.useState([]);
-
+  const [open, setOpen] = React.useState(false);
+  const [selectedUser, setSelectedUser] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   useEffect(() => {
@@ -253,6 +268,23 @@ export default function UsersTable(props) {
       return;
     }
     setSelected([]);
+  };
+  // Delete user from database
+  const handleModalDeleteUser = (event) => {
+    event.preventDefault();
+    handleDeleteUser(selectedUser);
+    setOpen(false);
+    window.location.reload(false);
+  };
+
+  const handleModalOpen = (event) => {
+    console.log(event);
+    setSelectedUser(event);
+    setOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setOpen(false);
   };
 
   const handleClick = (event, name) => {
@@ -341,22 +373,22 @@ export default function UsersTable(props) {
                         <TableRow
                           hover
                           key={row.Email}
-                          onClick={(event) =>
-                            handleClick(event, row.Email)
-                          }
+                          //   onClick={(event) =>
+                          //     handleClick(event, row.Email)
+                          //   }
                           role='checkbox'
                           aria-checked={isItemSelected}
                           tabIndex={-1}
                           selected={isItemSelected}
                         >
                           <TableCell padding='checkbox'>
-                            <Checkbox
+                            {/* <Checkbox
                               color='primary'
                               checked={isItemSelected}
                               inputProps={{
                                 'aria-labelledby': labelId,
                               }}
-                            />
+                            /> */}
                           </TableCell>
                           <TableCell
                             component='th'
@@ -377,7 +409,40 @@ export default function UsersTable(props) {
                             {row.LastLogin}
                           </TableCell>
                           <TableCell align='left'>
-                            {row.Action}
+                            <IconButton
+                              onClick={() => {
+                                handleModalOpen(row);
+                              }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                            <Dialog
+                              open={open}
+                              onClose={handleModalClose}
+                              aria-labelledby='alert-dialog-title'
+                              aria-describedby='alert-dialog-description'
+                            >
+                              <DialogTitle id='alert-dialog-title'>
+                                {`DELETE: ${selectedUser.Email}?`}
+                              </DialogTitle>
+                              <DialogContent>
+                                <DialogContentText id='alert-dialog-description'>
+                                  Are you sure you want to delete this
+                                  User?
+                                </DialogContentText>
+                              </DialogContent>
+                              <DialogActions>
+                                <Button onClick={handleModalClose}>
+                                  Cancel
+                                </Button>
+                                <Button
+                                  onClick={handleModalDeleteUser}
+                                  autoFocus
+                                >
+                                  Delete
+                                </Button>
+                              </DialogActions>
+                            </Dialog>
                           </TableCell>
                         </TableRow>
                       );
