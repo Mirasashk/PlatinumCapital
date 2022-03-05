@@ -8,6 +8,8 @@ import Divider from '@mui/material/Divider';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import { Link as RouterLink } from 'react-router-dom';
 import { Dashboard } from '@mui/icons-material';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import UploadIcon from '@mui/icons-material/Upload';
 
 function ListItemLink(props) {
   const { icon, primary, to } = props;
@@ -56,6 +58,16 @@ export default function ListRouter() {
           to='/users'
           primary='Users'
           icon={<DraftsIcon />}
+        />
+        <ListItemLink
+          to='/upload'
+          primary='Upload'
+          icon={<UploadIcon />}
+        />
+        <ListItemLink
+          to='/leads'
+          primary='Leads'
+          icon={<AssignmentIcon />}
         />
       </List>
       <Divider />
