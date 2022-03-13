@@ -19,10 +19,12 @@ import CollectionsTable from '../components/CollectionsTable';
 const Leads = () => {
   const [open, setOpen] = useState(false);
   const [collectionName, setCollectionName] = useState('');
+  const [updateTable, setUpdateTable] = useState(false);
 
   const handleCreateCollection = async (event) => {
     event.preventDefault();
     console.log(collectionName);
+    setUpdateTable(true);
     const dataToSend = {
       name: collectionName.toLowerCase(),
     };
@@ -34,6 +36,7 @@ const Leads = () => {
 
     setCollectionName('');
     setOpen(false);
+    setUpdateTable(false);
   };
 
   const handleModalOpen = () => {
@@ -112,9 +115,7 @@ const Leads = () => {
         </Box>
       </Box>
       <Box sx={{ mt: 3 }}>
-        <Paper>
-          <CollectionsTable />
-        </Paper>
+        <Paper>{!updateTable ? <CollectionsTable /> : <></>}</Paper>
       </Box>
     </div>
   );
