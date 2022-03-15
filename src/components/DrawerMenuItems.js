@@ -65,6 +65,11 @@ export default function ListRouter() {
           icon={<UploadIcon />}
         />
         <ListItemLink
+          to='/collections'
+          primary='Collections'
+          icon={<AssignmentIcon />}
+        />
+        <ListItemLink
           to='/leads'
           primary='Leads'
           icon={<AssignmentIcon />}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -13,42 +13,77 @@ import {
   Input,
   TextField,
   Autocomplete,
+  MenuItem,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
-import LeadsTable from '../components/LeadsTable';
+
+import UploadTable from '../components/UploadTable';
 import axios from 'axios';
+import FileUploader from '../utils/FileUploader';
 
 const UploadLeads = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [open, setOpen] = useState(false);
   const [fileUploaded, setFileUploaded] = useState(false);
+  const [collections, setCollections] = useState([]);
+  const [colSelection, setColSelection] = useState('');
+  const [done, setDone] = useState(false);
+  const [data, setData] = useState([]);
+  const [showSendToDatabase, setShowSendToDatabase] = useState(false);
+  const [dataToSend, setDataToSend] = useState([]);
 
   const onFileSelection = (event) => {
     setSelectedFile(event.target.files[0]);
     console.log(event.target.files[0]);
   };
 
+  useEffect(() => {
+    const getAllCollections = async () => {
+      const response = await axios.get(
+        'http://localhost:5000/api/db/collections'
+      );
+      setCollections(response.data.collectionInfo);
+    };
+
+    getAllCollections();
+  }, []);
+
+  useEffect(() => {
+    if (collections) {
+      setDone(true);
+    }
+  }, [collections]);
+
   const onUploadLeads = (event) => {
     event.preventDefault();
     const formData = new FormData();
 
-    if (selectedFile === null) {
-      setOpen(false);
+    if (!colSelection) {
     } else {
-      formData.append('myfile', selectedFile, selectedFile.name);
-      console.log(formData.get('myfile'));
-      axios
-        .post(
-          'http://localhost:5000/api/leads/uploadFile',
-          formData,
-          { headers: { 'Content-Type': 'multipart/form-data' } }
-        )
-        .then((response) => {
-          console.log(response);
-        });
       setOpen(false);
       setFileUploaded(true);
+      setShowSendToDatabase(true);
+      if (selectedFile === null) {
+        setOpen(false);
+      } else {
+        //   formData.append('myfile', selectedFile, selectedFile.name);
+        //   console.log(formData.get('myfile'));
+        //   axios
+        //     .post(
+        //       'http://localhost:5000/api/leads/uploadFile',
+        //       formData,
+        //       { headers: { 'Content-Type': 'multipart/form-data' } }
+        //     )
+        //     .then((response) => {
+        //       console.log(response);
+        //     });
+        setOpen(false);
+        setFileUploaded(true);
+      }
     }
+  };
+
+  const handleCollectionSelectionChange = (event) => {
+    setColSelection(event.target.value);
   };
 
   const handleModalOpen = () => {
@@ -59,63 +94,122 @@ const UploadLeads = () => {
     setOpen(false);
   };
 
-  return (
-    <div>
-      <Box
-        component={Paper}
-        sx={{
-          p: 1,
-          mt: 1,
-        }}
-        elevation={3}
-      >
-        <Box sx={{ p: 1 }}>
-          <Typography variant='h5'>Leads</Typography>
-        </Box>
-        <Divider />
-        <Box sx={{ p: 1, mt: 1, display: 'flex' }}>
-          <Button variant='contained' onClick={handleModalOpen}>
-            Upload Leads
-          </Button>
-          <Dialog
-            open={open}
-            onClose={handleModalClose}
-            aria-labelledby='alert-dialog-title'
-            aria-describedby='alert-dialog-description'
-          >
-            <DialogTitle id='alert-dialog-title'>
-              {`Upload a csv file with leads: ?`}
-            </DialogTitle>
-            <DialogContent>
-              <Input type='file' onChange={onFileSelection} />
+  const handleSendToDatabase = () => {
+    console.log(dataToSend);
+    const tempDataToSend = {
+      collection: colSelection,
+      data: dataToSend,
+    };
+    axios.post(
+      'http://localhost:5000/api/leads/uploadData',
+      tempDataToSend
+    );
+  };
 
-              <DialogContentText id='alert-dialog-description'>
-                Are you sure you want to upload this file?
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleModalClose}>Cancel</Button>
-              <Button
-                variant='contained'
-                onClick={onUploadLeads}
-                autoFocus
-              >
-                Upload
+  return (
+    <>
+      {!done ? (
+        <></>
+      ) : (
+        <div>
+          <Box
+            component={Paper}
+            sx={{
+              p: 1,
+              mt: 1,
+            }}
+            elevation={3}
+          >
+            <Box sx={{ p: 1 }}>
+              <Typography variant='h5'>Upload Leads</Typography>
+            </Box>
+            <Divider />
+            <Box sx={{ p: 1, mt: 1, display: 'flex' }}>
+              <Button variant='contained' onClick={handleModalOpen}>
+                Upload Leads
               </Button>
-            </DialogActions>
-          </Dialog>
-        </Box>
-      </Box>
-      <Box sx={{ mt: 3 }}>
-        {fileUploaded ? (
-          <Paper>
-            <LeadsTable />
-          </Paper>
-        ) : (
-          <></>
-        )}
-      </Box>
-    </div>
+              {!showSendToDatabase ? (
+                <></>
+              ) : (
+                <>
+                  <Button
+                    variant='contained'
+                    onClick={handleSendToDatabase}
+                    sx={{ ml: 4 }}
+                  >
+                    Send To Database
+                  </Button>
+                  <Typography variant='h6' sx={{ ml: 4 }}>
+                    Collection: {colSelection}
+                  </Typography>
+                </>
+              )}
+
+              <Dialog
+                open={open}
+                onClose={handleModalClose}
+                aria-labelledby='alert-dialog-title'
+                aria-describedby='alert-dialog-description'
+              >
+                <DialogTitle id='alert-dialog-title'>
+                  {`Upload a csv file with leads ?`}
+                </DialogTitle>
+                <DialogContent>
+                  <TextField
+                    id='outlined-select-currency'
+                    select
+                    label='Select Collection'
+                    fullWidth
+                    value={colSelection}
+                    onChange={handleCollectionSelectionChange}
+                    helperText='Please select collection'
+                    sx={{ mt: 2, mb: 2 }}
+                  >
+                    {collections.map((option) => (
+                      <MenuItem
+                        key={option.collection.name}
+                        value={option.collection.name}
+                      >
+                        {option.collection.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <br />
+                  {/* <Input type='file' onChange={onFileSelection} /> */}
+                  <FileUploader data={setData} />
+
+                  <DialogContentText id='alert-dialog-description'>
+                    Are you sure you want to upload this file?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleModalClose}>Cancel</Button>
+                  <Button
+                    variant='contained'
+                    onClick={onUploadLeads}
+                    autoFocus
+                  >
+                    Upload
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </Box>
+          </Box>
+          <Box sx={{ mt: 3 }}>
+            {fileUploaded ? (
+              <Paper>
+                <UploadTable
+                  data={data}
+                  setDataToSend={setDataToSend}
+                />
+              </Paper>
+            ) : (
+              <></>
+            )}
+          </Box>
+        </div>
+      )}
+    </>
   );
 };
 export default UploadLeads;

@@ -1,123 +1,99 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
-  Button,
   Divider,
   Paper,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
+  MenuItem,
   TextField,
 } from '@mui/material';
 
 import axios from 'axios';
-import CollectionsTable from '../components/CollectionsTable';
+import LeadsTable from '../components/LeadsTable';
 
 const Leads = () => {
-  const [open, setOpen] = useState(false);
-  const [collectionName, setCollectionName] = useState('');
-  const [updateTable, setUpdateTable] = useState(false);
+  const [updateTable, setUpdateTable] = useState(true);
+  const [collections, setCollections] = useState([]);
+  const [colSelection, setColSelection] = useState('');
+  const [done, setDone] = useState(false);
 
-  const handleCreateCollection = async (event) => {
-    event.preventDefault();
-    console.log(collectionName);
-    setUpdateTable(true);
-    const dataToSend = {
-      name: collectionName.toLowerCase(),
-    };
-    await axios({
-      method: 'post',
-      url: 'http://localhost:5000/api/db/createCollection',
-      data: dataToSend,
-    });
+  useEffect(() => {
+    if (!collections.length) {
+      const getAllCollections = async () => {
+        const response = await axios.get(
+          'http://localhost:5000/api/db/collections'
+        );
+        setCollections(response.data.collectionInfo);
+        setDone(true);
+      };
 
-    setCollectionName('');
-    setOpen(false);
-    setUpdateTable(false);
-  };
+      getAllCollections();
+    }
+  }, []);
 
-  const handleModalOpen = () => {
-    setOpen(true);
-  };
+  useEffect(() => {
+    setTimeout(() => {
+      if (collections.length) {
+        setColSelection(collections[0].collection.name);
+      }
+    }, 100);
+  }, [collections]);
 
-  const handleModalClose = () => {
-    setOpen(false);
-  };
-
-  const handleTextOnChange = (e) => {
-    setCollectionName(e.target.value);
+  const handleCollectionSelectionChange = (event) => {
+    setColSelection(event.target.value);
+    console.log('Collection changed');
   };
 
   return (
-    <div>
-      <Box
-        component={Paper}
-        sx={{
-          p: 1,
-          mt: 1,
-        }}
-        elevation={3}
-      >
-        <Box sx={{ p: 1 }}>
-          <Typography variant='h5'>Lead Collections</Typography>
-        </Box>
-        <Divider />
-        <Box sx={{ p: 1, mt: 1, display: 'flex' }}>
-          <Button variant='contained' onClick={handleModalOpen}>
-            Create Database Collection
-          </Button>
-
-          <Dialog
-            open={open}
-            onClose={handleModalClose}
-            aria-labelledby='alert-dialog-title'
-            aria-describedby='alert-dialog-description'
+    <>
+      {!done ? (
+        <></>
+      ) : (
+        <div>
+          <Box
+            component={Paper}
+            sx={{
+              p: 1,
+              mt: 1,
+            }}
+            elevation={3}
           >
-            <DialogTitle id='alert-dialog-title'>
-              {`Create a new collection for the Database`}
-            </DialogTitle>
-            <DialogContent>
+            <Box sx={{ p: 1 }}>
+              <Typography variant='h5'>Leads</Typography>
+            </Box>
+            <Divider />
+            <Box sx={{ p: 1, mt: 1, display: 'flex' }}>
               <TextField
-                label='Name the collection'
-                variant='standard'
-                value={collectionName}
-                fullWidth
-                required
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  mb: 2,
-                }}
-                onChange={handleTextOnChange}
-              />
-              <DialogContentText id='alert-dialog-description'>
-                This will create a new collection on the database.
-                <br />
-              </DialogContentText>
-              <Typography color='red'>
-                Name has to be in lowercase
-              </Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleModalClose}>Cancel</Button>
-              <Button
-                variant='contained'
-                onClick={handleCreateCollection}
-                autoFocus
+                id='outlined-select-currency'
+                select
+                label='Select Collection'
+                value={colSelection}
+                onChange={handleCollectionSelectionChange}
+                sx={{ ml: 4, width: 200 }}
               >
-                Create
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </Box>
-      </Box>
-      <Box sx={{ mt: 3 }}>
-        <Paper>{!updateTable ? <CollectionsTable /> : <></>}</Paper>
-      </Box>
-    </div>
+                {collections.map((option) => (
+                  <MenuItem
+                    key={option.collection.name}
+                    value={option.collection.name}
+                  >
+                    {option.collection.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Box>
+          </Box>
+          <Box sx={{ mt: 3 }}>
+            <Paper>
+              {updateTable ? (
+                <LeadsTable collection={colSelection} />
+              ) : (
+                <></>
+              )}
+            </Paper>
+          </Box>
+        </div>
+      )}
+    </>
   );
 };
 
