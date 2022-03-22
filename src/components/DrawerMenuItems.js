@@ -10,6 +10,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Dashboard } from '@mui/icons-material';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import UploadIcon from '@mui/icons-material/Upload';
+import GroupWorkIcon from '@mui/icons-material/GroupWork';
 
 function ListItemLink(props) {
   const { icon, primary, to } = props;
@@ -67,7 +68,7 @@ export default function ListRouter() {
         <ListItemLink
           to='/collections'
           primary='Collections'
-          icon={<AssignmentIcon />}
+          icon={<GroupWorkIcon />}
         />
         <ListItemLink
           to='/leads'

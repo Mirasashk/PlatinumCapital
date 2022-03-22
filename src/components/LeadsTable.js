@@ -10,6 +10,7 @@ export default function LeadsTable(props) {
   const tempColumns = [];
 
   useEffect(() => {
+    console.log('data changed');
     if (props.collection != '') {
       const collectionName = {
         name: props.collection,
@@ -58,7 +59,7 @@ export default function LeadsTable(props) {
             }}
             checkboxSelection
             ColumnResizeIcon
-            pageSize={10}
+            pageSize={100}
             rowsPerPageOptions={[10, 25, 50, 100, 250, 500, 1000]}
             sx={{ bgColor: 'white' }}
           />
