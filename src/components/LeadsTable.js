@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import axios from 'axios';
+
+import axiosInstance from '../apis/axios';
 
 export default function LeadsTable(props) {
   const [leads, setLeads] = useState([]);
   const [done, setDone] = useState(false);
-  const [collection, setCollection] = useState('');
   const [columns, setColumns] = useState([]);
-  const tempColumns = [];
 
   useEffect(() => {
-    if (props.collection != '') {
+    if (props.collection !== '') {
       const collectionName = {
         name: props.collection,
       };
       const getAllLeads = async () => {
-        const response = await axios.post(
-          'http://localhost:5000/api/leads',
+        const response = await axiosInstance.post(
+          '/api/leads',
           collectionName
         );
         setLeads(response.data.leads);
@@ -24,9 +23,10 @@ export default function LeadsTable(props) {
 
       getAllLeads();
     }
-  }, [collection, props.collection]);
+  }, [props.collection]);
 
   useEffect(() => {
+    const tempColumns = [];
     try {
       const keys = Object.keys(leads[0]);
 
@@ -36,7 +36,7 @@ export default function LeadsTable(props) {
           headerName: key,
           width: 175,
         };
-        tempColumns.push(temp);
+        return tempColumns.push(temp);
       });
 
       setColumns(tempColumns);

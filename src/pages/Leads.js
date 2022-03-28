@@ -8,11 +8,10 @@ import {
   TextField,
 } from '@mui/material';
 
-import axios from 'axios';
+import axiosInstance from '../apis/axios';
 import LeadsTable from '../components/LeadsTable';
 
 const Leads = () => {
-  const [updateTable, setUpdateTable] = useState(true);
   const [collections, setCollections] = useState([]);
   const [colSelection, setColSelection] = useState('');
   const [done, setDone] = useState(false);
@@ -20,28 +19,27 @@ const Leads = () => {
   useEffect(() => {
     if (!collections.length) {
       const getAllCollections = async () => {
-        const response = await axios.get(
-          'http://localhost:5000/api/db/collections'
+        const response = await axiosInstance.get(
+          '/api/db/collections'
         );
         setCollections(response.data.collectionInfo);
-        setDone(true);
       };
 
       getAllCollections();
     }
-  }, []);
+  }, [collections.length]);
 
   useEffect(() => {
     setTimeout(() => {
       if (collections.length) {
         setColSelection(collections[0].collection.name);
+        setDone(true);
       }
     }, 100);
   }, [collections]);
 
   const handleCollectionSelectionChange = (event) => {
     setColSelection(event.target.value);
-    console.log('Collection changed');
   };
 
   return (
@@ -84,11 +82,7 @@ const Leads = () => {
           </Box>
           <Box sx={{ mt: 3 }}>
             <Paper>
-              {updateTable ? (
-                <LeadsTable collection={colSelection} />
-              ) : (
-                <></>
-              )}
+              <LeadsTable collection={colSelection} />
             </Paper>
           </Box>
         </div>

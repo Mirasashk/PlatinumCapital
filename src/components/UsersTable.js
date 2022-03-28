@@ -21,13 +21,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import { getDatabase, ref, child, get } from 'firebase/database';
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Modal from '@mui/material/Modal';
+
 import Button from '@mui/material/Button';
 import { handleDeleteUser } from '../utils/handleUserMethods';
 
@@ -90,14 +91,7 @@ const headCells = [
 ];
 
 function UsersTableHead(props) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -105,17 +99,7 @@ function UsersTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding='checkbox'>
-          {/* <Checkbox
-            color='primary'
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          /> */}
-        </TableCell>
+        <TableCell padding='checkbox'></TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -193,20 +177,6 @@ const UsersTableToolbar = (props) => {
             </Typography>
           </>
         )}
-
-        {/* {numSelected > 0 ? (
-        <Tooltip title='Delete'>
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title='Filter list'>
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )} */}
       </Toolbar>
     </>
   );
@@ -226,22 +196,40 @@ export default function UsersTable(props) {
   const [open, setOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [userDetail, setUserDetail] = React.useState([]);
+  const dbRef = ref(getDatabase());
 
   useEffect(() => {
     const userRows = [];
-    setTimeout(() => {
-      props.users.map((user) => {
-        return userRows.push(
-          createData(
-            user.email,
-            user.displayName,
-            'Admin',
-            'Mar 1st, 2022',
-            'Delete'
-          )
-        );
-      });
+
+    props.users.map(async (user) => {
+      let userInfo = [];
+      await get(child(dbRef, `users/${user.uid}`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            userInfo = snapshot.val();
+            userRows.push(
+              createData(
+                user.email,
+                user.displayName,
+                snapshot.val().access,
+                'Mar 1st, 2022',
+                'Delete'
+              )
+            );
+          } else {
+            console.log('No Data available');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      console.log(userRows);
       setRows(userRows);
+      return null;
+    });
+    console.log(userRows);
+    setTimeout(() => {
       setDone(true);
     }, 1000);
   }, [props.users]);
@@ -285,26 +273,6 @@ export default function UsersTable(props) {
 
   const handleModalClose = () => {
     setOpen(false);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {

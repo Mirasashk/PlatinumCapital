@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { onAuthStateChanged, getAuth } from 'firebase/auth';
 import { getDatabase, ref, child, get } from 'firebase/database';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material';
 import theme from './utils/MyMaterialTheme';
 import { Route, Routes, useLocation } from 'react-router-dom';
@@ -20,7 +20,7 @@ const App = () => {
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         navigate('/login');
-      } else if (location.pathname == '/login') {
+      } else if (location.pathname === '/login') {
         get(child(dbRef, `users/${auth.currentUser.uid}`))
           .then((snapshot) => {
             if (snapshot.exists()) {
@@ -49,7 +49,7 @@ const App = () => {
         navigate(location.pathname);
       }
     });
-  }, []);
+  }, [auth, dbRef, location.pathname, navigate]);
 
   return (
     <ThemeProvider theme={theme}>

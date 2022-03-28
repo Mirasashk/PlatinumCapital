@@ -150,10 +150,7 @@ const Roles = [
     value: 'admin',
     label: 'Admin',
   },
-  {
-    value: 'manager',
-    label: 'Manager',
-  },
+
   {
     value: 'agent',
     label: 'Agent',

@@ -15,12 +15,12 @@ const MyRoutes = (props) => {
   const [accessLevel, setAccessLevel] = useState(false);
 
   useEffect(() => {
-    if (props.userInfo.access == 'admin') {
+    if (props.userInfo.access === 'admin') {
       setAccessLevel(true);
     } else {
       setAccessLevel(false);
     }
-  }, []);
+  }, [props.userInfo.access]);
 
   return (
     <div>

@@ -1,39 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth } from 'firebase/auth';
-import {
-  Button,
-  Box,
-  Paper,
-  Typography,
-  Divider,
-  TextField,
-  Icon,
-  Grid,
-} from '@mui/material';
-import axios from 'axios';
-import GroupWorkIcon from '@mui/icons-material/GroupWork';
+
+import { Box, Paper, Typography, Grid } from '@mui/material';
+
+import axiosInstance from '../apis/axios';
 
 const Dashboard = () => {
   const [numOfCollection, setNumOfCollection] = useState(0);
   let [numOfLeads, setNumOfLeads] = useState(0);
   const [done, setDone] = useState(false);
   const [users, setUsers] = useState([]);
-  const auth = getAuth();
-  let count = 0;
 
   useEffect(() => {
     const numOfCol = async () => {
-      const response = await axios.get(
-        'http://localhost:5000/api/db/collections'
-      );
+      let count = 0;
+      const response = await axiosInstance.get('/api/db/collections');
       setNumOfCollection(response.data.collectionInfo.length);
       response.data.collectionInfo.map((collection) => {
         count = count + collection.count;
+
+        return null;
       });
       setNumOfLeads(count);
     };
     const getAllUsers = async () => {
-      const fbUsers = await axios.get('http://localhost:5000/auth');
+      const fbUsers = await axiosInstance.get('/auth');
 
       setUsers(fbUsers.data.users.users);
     };
@@ -45,7 +35,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      if (numOfCollection != 0) {
+      if (numOfCollection !== 0) {
         setDone(true);
       }
     }, 500);

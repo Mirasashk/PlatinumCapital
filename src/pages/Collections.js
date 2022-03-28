@@ -13,7 +13,7 @@ import {
   TextField,
 } from '@mui/material';
 
-import axios from 'axios';
+import axiosInstance from '../apis/axios';
 import CollectionsTable from '../components/CollectionsTable';
 
 const Collections = () => {
@@ -28,9 +28,9 @@ const Collections = () => {
     const dataToSend = {
       name: collectionName,
     };
-    await axios({
+    await axiosInstance({
       method: 'post',
-      url: 'http://localhost:5000/api/db/createCollection',
+      url: '/api/db/createCollection',
       data: dataToSend,
     });
 

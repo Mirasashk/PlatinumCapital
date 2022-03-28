@@ -8,8 +8,9 @@ import {
   MenuItem,
   Button,
 } from '@mui/material';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import axios from 'axios';
+import { DataGrid } from '@mui/x-data-grid';
+
+import axiosInstance from '../apis/axios';
 import { useNavigate, Outlet } from 'react-router-dom';
 
 const categories = [
@@ -47,53 +48,25 @@ const LeadLookUp = () => {
       category: category,
       term: searchTerm,
     };
-    const results = await axios.post(
+    const results = await axiosInstance.post(
       'http://localhost:5000/api/lead/lookup',
       search
     );
 
     console.log(results);
 
-    // const rows = [];
-    // console.log(results.data.data[0].length);
-
-    // for (let i = 1; i < results.data.data.length + 1; i += 1) {
-    //   const row = {
-    //     id: i,
-    //   };
-    //   for (let j = 0; j <= results.data.data[0].length - 1; j += 1) {
-    //     row[
-    //       `${results.data.data[0][j]}`
-    //     ] = `${results.data.data[i][j]}`;
-
-    //     rows.push(row);
-    //   }
-    // }
-    // const columns = [];
-    // for (let j = 0; j <= results.data.data[0].length - 1; j += 1) {
-    //   const tempStr = results.data.data[0][j];
-
-    //   console.log(tempStr);
-
-    //   columns.push({
-    //     field: tempStr,
-    //     headerName: `${results.data.data[0][j]}`,
-    //     minWidth: 170,
-    //   });
-    // }
-
     const rows = [];
     const columns = [];
     const tableData = results.data.data;
     if (tableData.length > 0) {
       tableData.map((row) => {
-        rows.push(row);
+        return rows.push(row);
       });
 
       const columnKeys = Object.keys(rows[0]);
 
       columnKeys.map((key) => {
-        columns.push({
+        return columns.push({
           field: key,
           headerName: key,
           width: 150,

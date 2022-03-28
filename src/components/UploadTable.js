@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import axios from 'axios';
 
 function useData(rowLength, columnLength, tableData) {
   const [data, setData] = useState({ columns: [], rows: [] });
@@ -15,14 +14,13 @@ function useData(rowLength, columnLength, tableData) {
       for (let j = 0; j <= columnLength - 1; j += 1) {
         const tempColumn = camelize(tableData[0][j]);
         if (
-          (tempColumn == 'phoneHome' ||
-            tempColumn == 'phoneHome2' ||
-            tempColumn == 'phoneMobile' ||
-            tempColumn == 'phoneWork' ||
-            tempColumn == 'phoneWork2') &&
-          tableData[i][j] != undefined
+          (tempColumn === 'phoneHome' ||
+            tempColumn === 'phoneHome2' ||
+            tempColumn === 'phoneMobile' ||
+            tempColumn === 'phoneWork' ||
+            tempColumn === 'phoneWork2') &&
+          tableData[i][j] !== undefined
         ) {
-          console.log(tableData[i][j]);
           row[`${tempColumn}`] = `${camelize(tableData[i][j])}`;
         } else {
           row[`${tempColumn}`] = `${tableData[i][j]}`;
@@ -33,9 +31,6 @@ function useData(rowLength, columnLength, tableData) {
     const columns = [];
     for (let j = 0; j <= columnLength - 1; j += 1) {
       const tempStr = camelize(tableData[0][j]);
-
-      console.log(tempStr);
-
       columns.push({
         field: tempStr,
         headerName: `${tableData[0][j]}`,
@@ -47,7 +42,7 @@ function useData(rowLength, columnLength, tableData) {
       rows,
       columns,
     });
-  }, [rowLength, columnLength]);
+  }, [rowLength, columnLength, tableData]);
 
   return data;
 }
@@ -80,10 +75,9 @@ export default function UploadTable(props) {
   );
 
   useEffect(() => {
-    console.log(data);
     props.setDataToSend(data.rows);
     setDone(true);
-  }, [data]);
+  }, [data, props]);
 
   return (
     <>

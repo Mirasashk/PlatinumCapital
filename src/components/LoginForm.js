@@ -25,7 +25,12 @@ const LoginForm = () => {
       onSubmit={handleSubmit}
       sx={{ mt: 1, justifyContent: 'center', textAlign: 'center' }}
     >
-      <img src={Logo} width='60px' style={{ textAlign: 'center' }} />
+      <img
+        src={Logo}
+        alt='Logo'
+        width='60px'
+        style={{ textAlign: 'center' }}
+      />
       <Typography sx={{ fontWeight: '500' }}>
         Login to your account
       </Typography>

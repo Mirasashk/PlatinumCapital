@@ -10,18 +10,16 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  Input,
   TextField,
-  Autocomplete,
   MenuItem,
 } from '@mui/material';
 
 import UploadTable from '../components/UploadTable';
-import axios from 'axios';
+
+import axiosInstance from '../apis/axios';
 import FileUploader from '../utils/FileUploader';
 
 const UploadLeads = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
   const [open, setOpen] = useState(false);
   const [fileUploaded, setFileUploaded] = useState(false);
   const [collections, setCollections] = useState([]);
@@ -31,16 +29,9 @@ const UploadLeads = () => {
   const [showSendToDatabase, setShowSendToDatabase] = useState(false);
   const [dataToSend, setDataToSend] = useState([]);
 
-  const onFileSelection = (event) => {
-    setSelectedFile(event.target.files[0]);
-    console.log(event.target.files[0]);
-  };
-
   useEffect(() => {
     const getAllCollections = async () => {
-      const response = await axios.get(
-        'http://localhost:5000/api/db/collections'
-      );
+      const response = await axiosInstance.get('/api/db/collections');
       setCollections(response.data.collectionInfo);
     };
 
@@ -55,19 +46,15 @@ const UploadLeads = () => {
 
   const onUploadLeads = (event) => {
     event.preventDefault();
-    const formData = new FormData();
 
     if (!colSelection) {
     } else {
       setOpen(false);
       setFileUploaded(true);
       setShowSendToDatabase(true);
-      if (selectedFile === null) {
-        setOpen(false);
-      } else {
-        setOpen(false);
-        setFileUploaded(true);
-      }
+
+      setOpen(false);
+      setFileUploaded(true);
     }
   };
 
@@ -89,10 +76,7 @@ const UploadLeads = () => {
       collection: colSelection,
       data: dataToSend,
     };
-    axios.post(
-      'http://localhost:5000/api/leads/uploadData',
-      tempDataToSend
-    );
+    axiosInstance.post('/api/leads/uploadData', tempDataToSend);
   };
 
   return (

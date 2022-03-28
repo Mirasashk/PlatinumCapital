@@ -22,8 +22,7 @@ function AuthProvider(props) {
       })
       .catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        console.log(error);
       });
   } else {
     // Session Persistence
@@ -37,8 +36,7 @@ function AuthProvider(props) {
       })
       .catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        console.log(error);
       });
   }
   return true;

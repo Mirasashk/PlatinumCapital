@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosInstance from '../apis/axios';
 
 export const handleCreateUser = async (props) => {
   const data = new FormData(props.target);
@@ -13,7 +13,7 @@ export const handleCreateUser = async (props) => {
     accessLevel: data.get('access'),
   };
   try {
-    await axios.post('http://localhost:5000/auth/signup', userData);
+    await axiosInstance.post('/auth/signup', userData);
   } catch (err) {
     console.log(err);
   }
@@ -25,8 +25,8 @@ export const handleDeleteUser = async (props) => {
   };
   console.log(email);
   try {
-    const userInfo = await axios.post(
-      'http://localhost:5000/auth/user/delete',
+    const userInfo = await axiosInstance.post(
+      '/auth/user/delete',
       email
     );
     console.log(userInfo);

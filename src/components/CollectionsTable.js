@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import axios from 'axios';
+import { DataGrid } from '@mui/x-data-grid';
+import axiosInstance from '../apis/axios';
 
 function createRow(id, collectionName, numberOfLeads) {
   return {
@@ -33,9 +33,7 @@ const CollectionsTable = () => {
 
   useEffect(() => {
     const getAllCollections = async () => {
-      const response = await axios.get(
-        'http://localhost:5000/api/db/collections'
-      );
+      const response = await axiosInstance.get('/api/db/collections');
       setCollections(response.data.collectionInfo);
     };
 
@@ -45,10 +43,8 @@ const CollectionsTable = () => {
   useEffect(() => {
     const collectionRowsrows = [];
 
-    let id = 0;
     setTimeout(() => {
       collections.map((collection, index) => {
-        id += 1;
         return collectionRowsrows.push(
           createRow(
             index,

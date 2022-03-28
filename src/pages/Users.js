@@ -5,21 +5,21 @@ import {
   Box,
   Paper,
   Button,
-  Autocomplete,
-  TextField,
 } from '@mui/material';
 import UsersTable from '../components/UsersTable';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+
+import axiosInstance from '../apis/axios';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const getAllUsers = async () => {
-      const fbUsers = await axios.get('http://localhost:5000/auth');
+      const fbUsers = await axiosInstance.get('/auth');
 
       setUsers(fbUsers.data.users.users);
+      console.log(fbUsers.data.users.users);
     };
 
     getAllUsers();
