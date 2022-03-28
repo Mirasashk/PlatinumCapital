@@ -10,7 +10,6 @@ export default function LeadsTable(props) {
   const tempColumns = [];
 
   useEffect(() => {
-    console.log('data changed');
     if (props.collection != '') {
       const collectionName = {
         name: props.collection,

@@ -29,7 +29,6 @@ const Dashboard = () => {
       setNumOfCollection(response.data.collectionInfo.length);
       response.data.collectionInfo.map((collection) => {
         count = count + collection.count;
-        console.log(collection.count);
       });
       setNumOfLeads(count);
     };
@@ -46,7 +45,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      console.log(numOfCollection);
       if (numOfCollection != 0) {
         setDone(true);
       }

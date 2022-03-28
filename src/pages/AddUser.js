@@ -132,7 +132,7 @@ const AddUser = () => {
                   variant='contained'
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  Sign In
+                  Create user
                 </Button>
               </Box>
             </Paper>

@@ -65,17 +65,6 @@ const UploadLeads = () => {
       if (selectedFile === null) {
         setOpen(false);
       } else {
-        //   formData.append('myfile', selectedFile, selectedFile.name);
-        //   console.log(formData.get('myfile'));
-        //   axios
-        //     .post(
-        //       'http://localhost:5000/api/leads/uploadFile',
-        //       formData,
-        //       { headers: { 'Content-Type': 'multipart/form-data' } }
-        //     )
-        //     .then((response) => {
-        //       console.log(response);
-        //     });
         setOpen(false);
         setFileUploaded(true);
       }

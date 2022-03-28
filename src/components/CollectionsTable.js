@@ -44,7 +44,7 @@ const CollectionsTable = () => {
 
   useEffect(() => {
     const collectionRowsrows = [];
-    console.log(collections);
+
     let id = 0;
     setTimeout(() => {
       collections.map((collection, index) => {

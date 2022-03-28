@@ -13,14 +13,31 @@ function useData(rowLength, columnLength, tableData) {
         id: i,
       };
       for (let j = 0; j <= columnLength - 1; j += 1) {
-        row[`${tableData[0][j]}`] = `${tableData[i][j]}`;
+        const tempColumn = camelize(tableData[0][j]);
+        if (
+          (tempColumn == 'phoneHome' ||
+            tempColumn == 'phoneHome2' ||
+            tempColumn == 'phoneMobile' ||
+            tempColumn == 'phoneWork' ||
+            tempColumn == 'phoneWork2') &&
+          tableData[i][j] != undefined
+        ) {
+          console.log(tableData[i][j]);
+          row[`${tempColumn}`] = `${camelize(tableData[i][j])}`;
+        } else {
+          row[`${tempColumn}`] = `${tableData[i][j]}`;
+        }
       }
       rows.push(row);
     }
     const columns = [];
     for (let j = 0; j <= columnLength - 1; j += 1) {
+      const tempStr = camelize(tableData[0][j]);
+
+      console.log(tempStr);
+
       columns.push({
-        field: `${tableData[0][j]}`,
+        field: tempStr,
         headerName: `${tableData[0][j]}`,
         minWidth: 170,
       });
@@ -33,6 +50,25 @@ function useData(rowLength, columnLength, tableData) {
   }, [rowLength, columnLength]);
 
   return data;
+}
+
+function camelize(str) {
+  return str
+    .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+      return index === 0 ? word.toLowerCase() : word.toUpperCase();
+    })
+    .replace(/\s+/g, '')
+    .replace(/-/g, '')
+    .replace(/[()]/g, '');
+}
+
+function decamelize(str, separator) {
+  separator = typeof separator === 'undefined' ? '_' : separator;
+
+  return str
+    .replace(/([a-z\d])([A-Z])/g, '$1' + separator + '$2')
+    .replace(/([A-Z]+)([A-Z][a-z\d]+)/g, '$1' + separator + '$2')
+    .toLowerCase();
 }
 
 export default function UploadTable(props) {

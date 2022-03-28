@@ -3,12 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import firebase from 'firebase/compat/app';
 
-import { firebaseConfig } from './apis/firebase';
+import firebase from './apis/firebase';
 import { BrowserRouter } from 'react-router-dom';
 
-firebase.initializeApp(firebaseConfig);
+firebase();
 
 ReactDOM.render(
   <BrowserRouter>

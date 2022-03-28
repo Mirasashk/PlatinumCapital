@@ -229,7 +229,6 @@ export default function UsersTable(props) {
 
   useEffect(() => {
     const userRows = [];
-    console.log(props.users);
     setTimeout(() => {
       props.users.map((user) => {
         return userRows.push(

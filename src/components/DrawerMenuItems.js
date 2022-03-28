@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -46,35 +46,62 @@ ListItemLink.propTypes = {
   to: PropTypes.string.isRequired,
 };
 
-export default function ListRouter() {
+export default function ListRouter(props) {
+  const [accessLevel, setAccessLevel] = useState(false);
+
+  useEffect(() => {
+    if (props.userInfo.access == 'admin') {
+      setAccessLevel(true);
+    } else {
+      setAccessLevel(false);
+    }
+  }, []);
+
   return (
     <>
       <List aria-label='main mailbox folders'>
-        <ListItemLink
-          to='/'
-          primary='Dashboard'
-          icon={<Dashboard />}
-        />
-        <ListItemLink
-          to='/users'
-          primary='Users'
-          icon={<DraftsIcon />}
-        />
-        <ListItemLink
-          to='/upload'
-          primary='Upload'
-          icon={<UploadIcon />}
-        />
-        <ListItemLink
-          to='/collections'
-          primary='Collections'
-          icon={<GroupWorkIcon />}
-        />
-        <ListItemLink
-          to='/leads'
-          primary='Leads'
-          icon={<AssignmentIcon />}
-        />
+        {accessLevel ? (
+          <>
+            <ListItemLink
+              to='/'
+              primary='Dashboard'
+              icon={<Dashboard />}
+            />
+            <ListItemLink
+              to='/users'
+              primary='Users'
+              icon={<DraftsIcon />}
+            />
+            <ListItemLink
+              to='/upload'
+              primary='Upload'
+              icon={<UploadIcon />}
+            />
+            <ListItemLink
+              to='/collections'
+              primary='Collections'
+              icon={<GroupWorkIcon />}
+            />
+            <ListItemLink
+              to='/leads'
+              primary='Leads'
+              icon={<AssignmentIcon />}
+            />
+            <ListItemLink
+              to='/lead/lookup'
+              primary='Lead Lookup'
+              icon={<AssignmentIcon />}
+            />
+          </>
+        ) : (
+          <>
+            <ListItemLink
+              to='/lead/lookup'
+              primary='Lead Lookup'
+              icon={<AssignmentIcon />}
+            />
+          </>
+        )}
       </List>
       <Divider />
     </>

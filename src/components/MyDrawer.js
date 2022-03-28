@@ -91,7 +91,7 @@ const GetAuth = async () => {
   return await getAuth();
 };
 
-export default function MyAppBarDrawer() {
+export default function MyAppBarDrawer(props) {
   const [open, setOpen] = useState(false);
   const [auth, setAuth] = useState('');
   const [done, setDone] = useState(undefined);
@@ -184,14 +184,14 @@ export default function MyAppBarDrawer() {
               </IconButton>
             </DrawerHeader>
             <Divider />
-            <DrawerMenuItems />
+            <DrawerMenuItems userInfo={props.userInfo} />
           </Drawer>
           <Box
             component='main'
             sx={{ flexGrow: 1, p: 3, bgcolor: '#f3f3f3' }}
           >
             <DrawerHeader />
-            <MyRoutes />
+            <MyRoutes userInfo={props.userInfo} />
           </Box>
         </Box>
       )}
