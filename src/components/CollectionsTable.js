@@ -33,7 +33,7 @@ const CollectionsTable = () => {
 
   useEffect(() => {
     const getAllCollections = async () => {
-      const response = await axiosInstance.get('/api/db/collections');
+      const response = await axiosInstance.get('/db/collections');
       setCollections(response.data.collectionInfo);
     };
 

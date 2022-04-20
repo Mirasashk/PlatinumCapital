@@ -30,7 +30,7 @@ const Collections = () => {
     };
     await axiosInstance({
       method: 'post',
-      url: '/api/db/createCollection',
+      url: '/db/createCollection',
       data: dataToSend,
     });
 

@@ -13,7 +13,7 @@ const LeadDetails = () => {
         _id: params.leadId,
       };
       const response = await axiosInstance.post(
-        '/api/leads/leadDetails',
+        '/leads/leadDetails',
         lead
       );
       setLeadDetails(response.data.lead);

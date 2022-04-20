@@ -48,10 +48,7 @@ const LeadLookUp = () => {
       category: category,
       term: searchTerm,
     };
-    const results = await axiosInstance.post(
-      'http://localhost:5000/api/lead/lookup',
-      search
-    );
+    const results = await axiosInstance.post('/lead/lookup', search);
 
     console.log(results);
 

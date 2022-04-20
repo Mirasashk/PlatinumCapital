@@ -13,7 +13,7 @@ const Dashboard = () => {
   useEffect(() => {
     const numOfCol = async () => {
       let count = 0;
-      const response = await axiosInstance.get('/api/db/collections');
+      const response = await axiosInstance.get('/db/collections');
       setNumOfCollection(response.data.collectionInfo.length);
       response.data.collectionInfo.map((collection) => {
         count = count + collection.count;

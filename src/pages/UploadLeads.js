@@ -76,7 +76,7 @@ const UploadLeads = () => {
       collection: colSelection,
       data: dataToSend,
     };
-    axiosInstance.post('/api/leads/uploadData', tempDataToSend);
+    axiosInstance.post('/leads/uploadData', tempDataToSend);
   };
 
   return (

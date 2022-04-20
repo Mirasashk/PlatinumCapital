@@ -15,7 +15,7 @@ export default function LeadsTable(props) {
       };
       const getAllLeads = async () => {
         const response = await axiosInstance.post(
-          '/api/leads',
+          '/leads',
           collectionName
         );
         setLeads(response.data.leads);
