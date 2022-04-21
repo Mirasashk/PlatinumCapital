@@ -196,18 +196,15 @@ export default function UsersTable(props) {
   const [open, setOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [userDetail, setUserDetail] = React.useState([]);
   const dbRef = ref(getDatabase());
 
   useEffect(() => {
     const userRows = [];
 
     props.users.map(async (user) => {
-      let userInfo = [];
       await get(child(dbRef, `users/${user.uid}`))
         .then((snapshot) => {
           if (snapshot.exists()) {
-            userInfo = snapshot.val();
             userRows.push(
               createData(
                 user.email,
@@ -224,15 +221,15 @@ export default function UsersTable(props) {
         .catch((error) => {
           console.log(error);
         });
-      console.log(userRows);
+
       setRows(userRows);
       return null;
     });
-    console.log(userRows);
+
     setTimeout(() => {
       setDone(true);
     }, 1000);
-  }, [props.users]);
+  }, [props.users, dbRef]);
 
   useEffect(() => {
     const timerId = setTimeout(() => {

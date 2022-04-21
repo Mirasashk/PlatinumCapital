@@ -19,7 +19,6 @@ const Users = () => {
       const fbUsers = await axiosInstance.get('/auth');
 
       setUsers(fbUsers.data.users.users);
-      console.log(fbUsers.data.users.users);
     };
 
     getAllUsers();
