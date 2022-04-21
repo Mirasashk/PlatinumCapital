@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   Box,
@@ -35,6 +35,8 @@ const categories = [
 const LeadLookUp = () => {
   const [category, setCategory] = useState('phone');
   const [searchTerm, setSearchTerm] = useState('');
+  const [collections, setCollections] = useState([]);
+  const [colSelection, setColSelection] = useState('');
   const [showTable, setShowTable] = useState(false);
   const [data, setData] = useState({ columns: [], rows: [] });
   const navigate = useNavigate();
@@ -43,14 +45,32 @@ const LeadLookUp = () => {
     setCategory(event.target.value);
   };
 
+  useEffect(() => {
+    if (!collections.length) {
+      const getAllCollections = async () => {
+        const response = await axiosInstance.get('/db/collections');
+        setCollections(response.data.collectionInfo);
+      };
+
+      getAllCollections();
+    }
+  }, [collections.length]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (collections.length) {
+        setColSelection(collections[0].collection.name);
+      }
+    }, 100);
+  }, [collections]);
+
   const handleSearchClick = async () => {
     const search = {
+      collection: colSelection.toString(),
       category: category,
       term: searchTerm,
     };
     const results = await axiosInstance.post('/lead/lookup', search);
-
-    console.log(results);
 
     const rows = [];
     const columns = [];
@@ -79,9 +99,12 @@ const LeadLookUp = () => {
   };
 
   const onRowSelected = (event) => {
-    console.log(event);
     const leadId = event.row._id;
     navigate(`/lead/lookup/${leadId}`);
+  };
+
+  const handleCollectionSelectionChange = (event) => {
+    setColSelection(event.target.value);
   };
 
   return (
@@ -109,6 +132,23 @@ const LeadLookUp = () => {
               <Typography variant='h5'>Lead Lookup</Typography>
             </Grid>
             <Grid sx={{ p: 1 }}>
+              <TextField
+                id='outlined-select-currency'
+                select
+                label='Select Collection'
+                value={colSelection}
+                onChange={handleCollectionSelectionChange}
+                sx={{ ml: 2, mr: 3, width: 200 }}
+              >
+                {collections.map((option) => (
+                  <MenuItem
+                    key={option.collection.name}
+                    value={option.collection.name}
+                  >
+                    {option.collection.name}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
                 id='outlined-select-currency'
                 select

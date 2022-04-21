@@ -59,7 +59,7 @@ const CollectionsTable = () => {
     setRows(collectionRowsrows);
     setTimeout(() => {
       setDone(true);
-    }, 700);
+    }, 1000);
   }, [collections]);
 
   return (
