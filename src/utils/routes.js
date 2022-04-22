@@ -29,7 +29,7 @@ const MyRoutes = (props) => {
       <Routes>
         {accessLevel ? (
           <>
-            <Route index element={<Dashboard />} />
+            <Route index path='/' element={<Dashboard />} />
             <Route path='/users' element={<Users />} />
             <Route path='/user/:userid' element={<UserDetail />} />
             <Route path='/myaccount' element={<MyUserDetail />} />

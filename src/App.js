@@ -24,7 +24,6 @@ const App = () => {
         get(child(dbRef, `users/${auth.currentUser.uid}`))
           .then((snapshot) => {
             if (snapshot.exists()) {
-              console.log(snapshot.val());
               setUserInfo(snapshot.val());
             } else {
               console.log('No Data available');
@@ -33,7 +32,7 @@ const App = () => {
           .catch((error) => {
             console.log(error);
           });
-        navigate('/*');
+        navigate('/', { replace: true });
       } else {
         get(child(dbRef, `users/${auth.currentUser.uid}`))
           .then((snapshot) => {
@@ -46,7 +45,6 @@ const App = () => {
           .catch((error) => {
             console.log(error);
           });
-        navigate(location.pathname);
       }
     });
   }, [auth, dbRef, location.pathname, navigate]);
@@ -58,6 +56,7 @@ const App = () => {
           <Route path='/login' element={<LoginPage />} />
           <Route
             path='/*'
+            index
             element={<MyDrawer userInfo={userInfo} />}
           />
         </Routes>
