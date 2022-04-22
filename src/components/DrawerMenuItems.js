@@ -11,6 +11,7 @@ import { Dashboard } from '@mui/icons-material';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import UploadIcon from '@mui/icons-material/Upload';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 function ListItemLink(props) {
   const { icon, primary, to } = props;
@@ -63,6 +64,11 @@ export default function ListRouter(props) {
         {accessLevel ? (
           <>
             <ListItemLink
+              to='/myaccount'
+              primary='My Account'
+              icon={<AccountBoxIcon />}
+            />
+            <ListItemLink
               to='/'
               primary='Dashboard'
               icon={<Dashboard />}
@@ -95,6 +101,11 @@ export default function ListRouter(props) {
           </>
         ) : (
           <>
+            <ListItemLink
+              to='/myaccount'
+              primary='My Account'
+              icon={<AccountBoxIcon />}
+            />
             <ListItemLink
               to='/lead/lookup'
               primary='Lead Lookup'

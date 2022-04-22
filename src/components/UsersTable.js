@@ -31,14 +31,23 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import Button from '@mui/material/Button';
 import { handleDeleteUser } from '../utils/handleUserMethods';
+import { useNavigate, Outlet } from 'react-router-dom';
 
-function createData(Email, DisplayName, Access, LastLogin, Action) {
+function createData(
+  Email,
+  DisplayName,
+  Access,
+  LastLogin,
+  Action,
+  uid
+) {
   return {
     Email,
     DisplayName,
     Access,
     LastLogin,
     Action,
+    uid,
   };
 }
 
@@ -197,6 +206,7 @@ export default function UsersTable(props) {
   const [selectedUser, setSelectedUser] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const dbRef = ref(getDatabase());
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userRows = [];
@@ -211,7 +221,8 @@ export default function UsersTable(props) {
                 user.displayName,
                 snapshot.val().access,
                 'Mar 1st, 2022',
-                'Delete'
+                'Delete',
+                user.uid
               )
             );
           } else {
@@ -281,6 +292,12 @@ export default function UsersTable(props) {
     setPage(0);
   };
 
+  const handleRowClick = (event, uid) => {
+    event.preventDefault();
+
+    navigate(`/user/${uid}`);
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -338,39 +355,46 @@ export default function UsersTable(props) {
                         <TableRow
                           hover
                           key={row.Email}
-                          //   onClick={(event) =>
-                          //     handleClick(event, row.Email)
-                          //   }
                           role='checkbox'
                           aria-checked={isItemSelected}
                           tabIndex={-1}
                           selected={isItemSelected}
                         >
-                          <TableCell padding='checkbox'>
-                            {/* <Checkbox
-                              color='primary'
-                              checked={isItemSelected}
-                              inputProps={{
-                                'aria-labelledby': labelId,
-                              }}
-                            /> */}
-                          </TableCell>
+                          <TableCell></TableCell>
                           <TableCell
                             component='th'
                             id={labelId}
                             scope='row'
                             padding='none'
+                            onClick={(e) =>
+                              handleRowClick(e, row.uid)
+                            }
                           >
                             {row.Email}
                           </TableCell>
-                          <TableCell align='left'>
+                          <TableCell
+                            align='left'
+                            onClick={(e) =>
+                              handleRowClick(e, row.uid)
+                            }
+                          >
                             {row.DisplayName}
                           </TableCell>
 
-                          <TableCell align='left'>
+                          <TableCell
+                            align='left'
+                            onClick={(e) =>
+                              handleRowClick(e, row.uid)
+                            }
+                          >
                             {row.Access}
                           </TableCell>
-                          <TableCell align='left'>
+                          <TableCell
+                            align='left'
+                            onClick={(e) =>
+                              handleRowClick(e, row.uid)
+                            }
+                          >
                             {row.LastLogin}
                           </TableCell>
                           <TableCell align='left'>
@@ -434,6 +458,7 @@ export default function UsersTable(props) {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
+          <Outlet />
         </Box>
       )}
     </>

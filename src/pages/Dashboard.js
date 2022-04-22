@@ -47,6 +47,9 @@ const Dashboard = () => {
         <></>
       ) : (
         <Grid>
+          <Typography variant='h4' sx={{ mb: 3 }}>
+            Dashboard
+          </Typography>
           <Grid
             sx={{
               width: '100%',

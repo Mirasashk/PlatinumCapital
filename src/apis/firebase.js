@@ -19,9 +19,3 @@ const firebase = () => {
 };
 
 export default firebase;
-
-// export const fbApp = () => {
-//   initializeApp(firebaseConfig);
-// };
-
-// export const db = getFirestore(fbApp);

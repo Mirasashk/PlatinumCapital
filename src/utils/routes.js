@@ -10,6 +10,8 @@ import UploadLeads from '../pages/UploadLeads';
 import Leads from '../pages/Leads';
 import LeadLookUp from '../pages/LeadLookUp';
 import LeadDetails from '../pages/LeadDetails';
+import MyUserDetail from '../pages/MyUserDetail';
+import UserDetail from '../pages/UserDetail';
 
 const MyRoutes = (props) => {
   const [accessLevel, setAccessLevel] = useState(false);
@@ -29,6 +31,8 @@ const MyRoutes = (props) => {
           <>
             <Route index element={<Dashboard />} />
             <Route path='/users' element={<Users />} />
+            <Route path='/user/:userid' element={<UserDetail />} />
+            <Route path='/myaccount' element={<MyUserDetail />} />
             <Route path='/users/addUser' element={<AddUser />} />
             <Route path='/database' element={<Database />} />
             <Route path='/reports' element={<Reports />} />
@@ -43,6 +47,7 @@ const MyRoutes = (props) => {
           </>
         ) : (
           <>
+            <Route path='/myaccount' element={<MyUserDetail />} />
             <Route path='/lead/lookup' element={<LeadLookUp />} />
             <Route
               path='/lead/lookup/:leadId'
