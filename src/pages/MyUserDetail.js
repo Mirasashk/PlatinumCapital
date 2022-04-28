@@ -120,20 +120,6 @@ const MyUserDetail = () => {
                         04/21/2022
                       </Typography>
                     </Stack>
-                    <Stack>
-                      <IconButton sx={{ mr: 3 }}>
-                        <ModeEditIcon />
-                      </IconButton>
-                      <IconButton sx={{ mt: 1, mr: 3 }}>
-                        <ModeEditIcon />
-                      </IconButton>
-                      <IconButton sx={{ mt: 1, mr: 3 }}>
-                        <ModeEditIcon />
-                      </IconButton>
-                      <IconButton sx={{ mt: 1, mr: 3 }}>
-                        <ModeEditIcon />
-                      </IconButton>
-                    </Stack>
                   </Stack>
                 </Box>
               </Box>

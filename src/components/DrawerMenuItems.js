@@ -12,6 +12,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import UploadIcon from '@mui/icons-material/Upload';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 
 function ListItemLink(props) {
   const { icon, primary, to } = props;
@@ -96,7 +97,7 @@ export default function ListRouter(props) {
             <ListItemLink
               to='/lead/lookup'
               primary='Lead Lookup'
-              icon={<AssignmentIcon />}
+              icon={<PersonSearchIcon />}
             />
           </>
         ) : (
@@ -109,7 +110,7 @@ export default function ListRouter(props) {
             <ListItemLink
               to='/lead/lookup'
               primary='Lead Lookup'
-              icon={<AssignmentIcon />}
+              icon={<PersonSearchIcon />}
             />
           </>
         )}
