@@ -17,8 +17,10 @@ const LeadDetails = () => {
   let params = useParams();
 
   useEffect(() => {
+    console.log(params);
     const getLeadDetail = async () => {
       const lead = {
+        collection: params.collection,
         _id: params.leadId,
       };
       const response = await axiosInstance.post(
@@ -26,25 +28,22 @@ const LeadDetails = () => {
         lead
       );
 
-      setTimeout(() => {
-        for (var key in response.data.lead) {
-          if (response.data.lead[key] === '') {
-            response.data.lead[key] = 'N/A';
-          }
+      for (var key in response.data.lead) {
+        if (response.data.lead[key] === '') {
+          response.data.lead[key] = 'N/A';
         }
-        console.log(response.data.lead);
-        setLeadDetails(response.data.lead);
-      }, 800);
+      }
+
+      setLeadDetails(response.data.lead);
     };
 
     getLeadDetail();
   }, [params.leadId]);
 
   useEffect(() => {
-    setTimeout(() => {
-      console.log(leadDetails);
-      setDone(true);
-    }, 1000);
+    console.log(leadDetails);
+
+    setDone(true);
   }, [leadDetails]);
 
   return (
@@ -61,7 +60,13 @@ const LeadDetails = () => {
           elevation={3}
         >
           <Box sx={{ p: 1 }}>
-            <Typography variant='h5'>User Details</Typography>
+            <Typography variant='h5'>
+              User Details &nbsp;&nbsp;&nbsp;&nbsp; -
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              {leadDetails.firstName} {leadDetails.lastName}{' '}
+              &nbsp;&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp;&nbsp; Id:{' '}
+              {leadDetails.id}
+            </Typography>
           </Box>
           <Divider />
           <Box sx={{ p: 1, mt: 2, pl: 3 }}>

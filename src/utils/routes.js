@@ -41,7 +41,7 @@ const MyRoutes = (props) => {
             <Route path='/upload' element={<UploadLeads />} />
             <Route path='/lead/lookup' element={<LeadLookUp />} />
             <Route
-              path='/lead/lookup/:leadId'
+              path='/lead/lookup/:collection/:leadId'
               element={<LeadDetails />}
             />
           </>
@@ -50,7 +50,7 @@ const MyRoutes = (props) => {
             <Route path='/myaccount' element={<MyUserDetail />} />
             <Route path='/lead/lookup' element={<LeadLookUp />} />
             <Route
-              path='/lead/lookup/:leadId'
+              path='/lead/lookup/:collection/:leadId'
               element={<LeadDetails />}
             />
           </>

@@ -97,7 +97,9 @@ const LeadLookUp = () => {
 
   const onRowSelected = (event) => {
     const leadId = event.row._id;
-    navigate(`/lead/lookup/${leadId}`);
+    const collection = navigate(
+      `/lead/lookup/${colSelection}/${leadId}`
+    );
   };
 
   const handleCollectionSelectionChange = (event) => {
