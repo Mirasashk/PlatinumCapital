@@ -8,10 +8,8 @@ import {
   Button,
   Stack,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
 
 import axiosInstance from '../apis/axios';
-import { RepeatOneSharp } from '@mui/icons-material';
 
 const LeadDetails = () => {
   const [leadDetails, setLeadDetails] = useState([]);
@@ -44,7 +42,9 @@ const LeadDetails = () => {
   useEffect(() => {
     console.log(leadDetails);
 
-    setDone(true);
+    setTimeout(() => {
+      setDone(true);
+    }, 1000);
   }, [leadDetails]);
 
   return (
