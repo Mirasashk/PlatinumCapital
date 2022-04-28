@@ -26,10 +26,6 @@ const categories = [
     value: 'lastName',
     label: 'Last Name',
   },
-  {
-    value: 'state',
-    label: 'State',
-  },
 ];
 
 const LeadLookUp = () => {
@@ -42,6 +38,7 @@ const LeadLookUp = () => {
   const navigate = useNavigate();
 
   const handleChange = (event) => {
+    event.preventDefault();
     setCategory(event.target.value);
   };
 
