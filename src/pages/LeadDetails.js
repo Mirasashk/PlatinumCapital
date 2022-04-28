@@ -61,13 +61,7 @@ const LeadDetails = () => {
           elevation={3}
         >
           <Box sx={{ p: 1 }}>
-            <Typography variant='h5'>
-              User Details &nbsp;&nbsp;&nbsp;&nbsp; -
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              {leadDetails.firstName} {leadDetails.lastName}{' '}
-              &nbsp;&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp;&nbsp; Id:{' '}
-              {leadDetails.id}
-            </Typography>
+            <Typography variant='h5'>User Details</Typography>
           </Box>
           <Divider />
           <Box sx={{ p: 1, mt: 2, pl: 3 }}>
