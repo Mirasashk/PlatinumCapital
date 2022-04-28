@@ -32,7 +32,7 @@ const LeadDetails = () => {
           response.data.lead[key] = 'N/A';
         }
       }
-
+      console.log(response.data.lead);
       setLeadDetails(response.data.lead);
     };
 
@@ -40,9 +40,8 @@ const LeadDetails = () => {
   }, [params.leadId]);
 
   useEffect(() => {
-    console.log(leadDetails);
-
     setTimeout(() => {
+      console.log(leadDetails);
       setDone(true);
     }, 1000);
   }, [leadDetails]);
