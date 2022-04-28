@@ -15,7 +15,6 @@ const LeadDetails = () => {
   const [leadDetails, setLeadDetails] = useState([]);
   const [done, setDone] = useState(false);
   let params = useParams();
-  const leadDetailArray = [];
 
   useEffect(() => {
     const getLeadDetail = async () => {
@@ -27,13 +26,15 @@ const LeadDetails = () => {
         lead
       );
 
-      for (var key in response.data.lead) {
-        if (response.data.lead[key] === '') {
-          response.data.lead[key] = 'N/A';
+      setTimeout(() => {
+        for (var key in response.data.lead) {
+          if (response.data.lead[key] === '') {
+            response.data.lead[key] = 'N/A';
+          }
         }
-      }
-      console.log(response.data.lead);
-      setLeadDetails(response.data.lead);
+        console.log(response.data.lead);
+        setLeadDetails(response.data.lead);
+      }, 800);
     };
 
     getLeadDetail();
