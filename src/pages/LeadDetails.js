@@ -28,6 +28,9 @@ const LeadDetails = () => {
         lead
       );
 
+      console.log(lead);
+      console.log(response.data);
+
       for (var key in response.data.lead) {
         if (response.data.lead[key] === '') {
           response.data.lead[key] = 'N/A';

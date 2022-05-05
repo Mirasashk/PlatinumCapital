@@ -31,10 +31,9 @@ const categories = [
 const LeadLookUp = () => {
   const [category, setCategory] = useState('phone');
   const [searchTerm, setSearchTerm] = useState('');
-  const [collections, setCollections] = useState([]);
-  const [colSelection, setColSelection] = useState('');
   const [showTable, setShowTable] = useState(false);
   const [data, setData] = useState({ columns: [], rows: [] });
+  const [newColSel, setNewColSel] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -42,36 +41,19 @@ const LeadLookUp = () => {
     setCategory(event.target.value);
   };
 
-  useEffect(() => {
-    if (!collections.length) {
-      const getAllCollections = async () => {
-        const response = await axiosInstance.get('/db/collections');
-        setCollections(response.data.collectionInfo);
-      };
-
-      getAllCollections();
-    }
-  }, [collections.length]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (collections.length) {
-        setColSelection(collections[0].collection.name);
-      }
-    }, 100);
-  }, [collections]);
-
   const handleSearchClick = async () => {
     const search = {
-      collection: colSelection.toString(),
       category: category,
       term: searchTerm,
     };
     const results = await axiosInstance.post('/lead/lookup', search);
+    console.log(results.data);
+
+    setNewColSel(results.data.data.collectionName);
 
     const rows = [];
     const columns = [];
-    const tableData = results.data.data;
+    const tableData = results.data.data.leadsDetail;
     if (tableData.length > 0) {
       tableData.map((row) => {
         return rows.push(row);
@@ -97,13 +79,7 @@ const LeadLookUp = () => {
 
   const onRowSelected = (event) => {
     const leadId = event.row._id;
-    const collection = navigate(
-      `/lead/lookup/${colSelection}/${leadId}`
-    );
-  };
-
-  const handleCollectionSelectionChange = (event) => {
-    setColSelection(event.target.value);
+    navigate(`/lead/lookup/${newColSel}/${leadId}`);
   };
 
   return (
@@ -131,23 +107,6 @@ const LeadLookUp = () => {
               <Typography variant='h5'>Lead Lookup</Typography>
             </Grid>
             <Grid sx={{ p: 1 }}>
-              <TextField
-                id='outlined-select-currency'
-                select
-                label='Select Collection'
-                value={colSelection}
-                onChange={handleCollectionSelectionChange}
-                sx={{ ml: 2, mr: 3, width: 200 }}
-              >
-                {collections.map((option) => (
-                  <MenuItem
-                    key={option.collection.name}
-                    value={option.collection.name}
-                  >
-                    {option.collection.name}
-                  </MenuItem>
-                ))}
-              </TextField>
               <TextField
                 id='outlined-select-currency'
                 select
